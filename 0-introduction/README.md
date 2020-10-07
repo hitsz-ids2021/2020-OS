@@ -79,12 +79,12 @@
       <div align=center><img width="350" height="250" src="https://github.com/HITSZ-SYSTEMS/2019-OS/blob/master/1-introduction/img/%E6%96%B0%E7%A1%AC%E7%9B%98.png?raw=true"></div>
       <div align=center>图3-1 添加新硬盘</div>
    查看新硬盘设备  
-     ls /dev/sdb  
+     `<ls /dev/sdb >`
     
    切换root用户  
-     sudo su  
-     mount /dev/sdb1 /mnt/  
-     grub-install --force --boot-directory=/mnt/boot /dev/sdb  
+     `<sudo su>`
+     `<mount /dev/sdb1 /mnt/>` 
+     `<grub-install --force --boot-directory=/mnt/boot /dev/sdb>`
 	  
    将/boot目录下的vmlinuz-4.15.0-29-generic和initramfs-4.15.0-29-generic复制到/mnt/boot目录下，将/boot/grub/grub.cfg复制到/mnt/boot/grub下。找到以下内容:    
       <div align=center><img width="550" height="450" src="https://github.com/HITSZ-SYSTEMS/2019-OS/blob/master/1-introduction/img/grub.png?raw=true"></div>
