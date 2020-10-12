@@ -49,6 +49,7 @@
      实验vmware虚拟机将生成的boot.img挂载成软盘。  
      在虚拟机上添加设备。  
       <div align=center><img width="350" height="250" src="https://github.com/HITSZ-SYSTEMS/2019-OS/blob/master/1-introduction/img/1.png?raw=true"></div>
+      ![image](https://github.com/HITSZ-SYSTEMS/2020-OS/blob/main/0-introduction/img/1.png)
       <div align=center>图1-1 添加设备</div>
       <div align=center><img width="350" height="250" src="https://github.com/HITSZ-SYSTEMS/2019-OS/blob/master/1-introduction/img/%E8%BD%AF%E9%A9%B1.png?raw=true"></div>
       <div align=center>图1-2 选择软驱</div>
