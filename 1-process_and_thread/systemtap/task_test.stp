@@ -1,0 +1,117 @@
+// Usage: stap -v -g ./task_test.stp PID
+
+// 用[%%]围住的是嵌入的C代码，需要在命令行添加-g参数以进入gulu模式
+%{
+#include<linux/sched.h>
+#include<linux/list.h>
+%}
+
+// 沿着sibling链表找到下一个兄弟进程的task_struct
+function get_the_next_task:long(task:long) %{
+    struct task_struct *p = (struct task_struct *)STAP_ARG_task;
+    if(p->sibling.next == p->sibling.prev) {
+        STAP_RETVALUE = -1;//没有兄弟节点的情况
+    } else {
+	    struct task_struct *the_next_task = list_entry(p->sibling.next, struct task_struct, sibling);
+        STAP_RETVALUE = (long)the_next_task;
+    }
+%}
+
+// 通过state字段获得字符串形式的状态
+function get_state_str:string(state:long) {
+    the_state_str = "Error";
+    if (state == 0) {
+        the_state_str = "0(RUNNING)";
+    } else if (state == 1) {
+        the_state_str = "1(INTERRUPTIBLE)";
+    } else if (state == 2) {
+        the_state_str = "2(UNINTERRUPTIBLE)";
+    } else if (state == 4) {
+        the_state_str = "4(STOPPED)";
+    } else if (state == 8) {
+        the_state_str = "8(TRACED)";
+    } else if (state == 16) {
+        the_state_str = "16(ZOMBIE)";
+    } else if (state == 32) {
+        the_state_str = "32(DEAD)";
+    }
+
+    return the_state_str;
+}
+
+// 获得所有的兄弟进程，并打印其pid和状态
+function get_all_siblings(task:long) {
+    //打印所有的兄弟进程
+    i = 1;
+    sibling = get_the_next_task(task);
+    while(sibling!=task) { 
+        //the_pid = @cast(sibling, "task_struct", "kernel<linux/sched.h>")->pid;
+        //the_parent_addr = @cast(sibling, "task_struct", "kernel<linux/sched.h>")->parent;
+        the_pid = task_pid(sibling);
+        the_parent = task_parent(sibling);
+        the_state = task_state(sibling);
+        if (the_pid != 0) {
+            printf("\tSibling%d:%s\n",i,task_execname(sibling));
+            printf("\t  pid:%d\n",the_pid);
+            printf("\t  state:%s\n", get_state_str(the_state));
+            printf("\t  parent:%s\n",task_execname(the_parent));
+            i += 1;
+        }
+        sibling = get_the_next_task(sibling);
+    }
+}
+
+// 输出某个task_struct的各个字段值
+function print_details(task:long) {
+    //the_state = @cast(task, "task_struct", "kernel<linux/sched.h>")->state;
+    //the_flags = @cast(task, "task_struct", "kernel<linux/sched.h>")->flags;
+    //the_pid = @cast(task, "task_struct", "kernel<linux/sched.h>")->pid;
+    //the_parent = @cast(task, "task_struct", "kernel<linux/sched.h>")->parent;
+
+    the_pid = task_pid(task);
+    the_name = task_execname(task);
+    the_uid = task_uid(task);
+
+    // 这里获得字段的方式可以通过tapset的内建函数，也可以通过强转成task_struct结构体
+    the_state = task_state(task);
+    the_state_str = get_state_str(the_state);
+    the_flags = @cast(task, "task_struct", "kernel<linux/sched.h>")->flags;
+    the_stack = @cast(task, "task_struct", "kernel<linux/sched.h>")->stack;
+    the_group_leader = @cast(task, "task_struct", "kernel<linux/sched.h>")->group_leader;
+    the_parent = task_parent(task);
+    the_fs = @cast(task, "task_struct", "kernel<linux/sched.h>")->fs;
+    the_mm = @cast(task, "task_struct", "kernel<linux/sched.h>")->mm;
+
+    printf("\tpid: %d\n", the_pid);
+    printf("\tname: %s\n", the_name);
+    printf("\tuid: %d\n", the_uid);
+
+    printf("\tstate: %s\n", the_state_str);
+    printf("\tflags: %x\n", the_flags);
+    printf("\tstackAddr: %p\n", the_stack);
+    printf("\tgroup_leader: %p\n", the_group_leader);
+    printf("\tparent: %p\n", the_parent);
+    printf("\tfs: %p\n", the_fs);
+    printf("\tmm: %p\n", the_mm);
+}
+
+// 输出函数
+function Display() {
+    printf("*********************************************************\n");
+    A_pid = $1;
+    A_task = pid2task(A_pid);
+    printf("The ancestry relation is: %s\n", task_ancestry(A_task, 0)); // 通过tapset库中的函数获得祖先进程信息
+    printf("A details:\n");
+    print_details(A_task);
+    printf("The parent details:\n");
+    print_details(@cast(A_task, "task_struct", "kernel<linux/sched.h>")->parent); // 获得task_struct的parent字段(通过强转)
+    if (get_the_next_task(A_task) != -1) {
+        printf("The siblings:\n");
+        get_all_siblings(A_task);
+    }
+    printf("*********************************************************\n");
+}
+
+probe begin {
+    Display();
+}
