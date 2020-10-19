@@ -14,9 +14,9 @@
   4. 使用nasm对上述汇编代码编译，生成二进制：
      `<nasm boot.asm -o boot.bin>`
   5. 使用软盘镜像来模拟软盘。执行以下命令，写入软盘的第一个扇区。
-     `<dd if=/dev/zero of=emptydisk.img bs=512 count=2880>` #生成空白软盘镜像文件
-     `<dd if=boot.bin of=boot.img bs=512 count=1 #用 bin file>` 生成对应的镜像文件
-     `<dd if=emptydisk.img of=boot.img skip=1 seek=1 bs=512 count=2879 >`#在 bin 生成的镜像文件后补上空白，成为合适大小的软盘镜像
+      `<dd if=/dev/zero of=emptydisk.img bs=512 count=2880>` #生成空白软盘镜像文件
+      `<dd if=boot.bin of=boot.img bs=512 count=1 #用 bin file>` 生成对应的镜像文件
+      `<dd if=emptydisk.img of=boot.img skip=1 seek=1 bs=512 count=2879 >`#在 bin 生成的镜像文件后补上空白，成为合适大小的软盘镜像
 
 ### boot.s at&t格式的软盘启动汇编程序 
   1. VMware虚拟机、Ubuntu 18.04操作系统  
