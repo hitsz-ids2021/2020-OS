@@ -18,7 +18,7 @@
      `<dd if=boot.bin of=boot.img bs=512 count=1 #用 bin file>` 生成对应的镜像文件
      `<dd if=emptydisk.img of=boot.img skip=1 seek=1 bs=512 count=2879 >`#在 bin 生成的镜像文件后补上空白，成为合适大小的软盘镜像
 
-### boot.s at&t格式的软盘启动汇编程序 
+### boot.s AT&T格式的软盘启动汇编程序 
   1. VMware虚拟机、Ubuntu 18.04操作系统  
   2. 编译代码，生成二进制：
      `<as -o boot.o boot.s>`
@@ -28,14 +28,13 @@
      `<dd if=boot.bin of=boot.img bs=512 count=1>` #用 bin file 生成对应的镜像文件
      `<dd if=emptydisk.img of=boot.img skip=1 seek=1 bs=512 count=2879 >`#在 bin 生成的镜像文件后补上空白，成为合适大小的软盘镜像
 
-  - mbr_disk.asm 硬盘启动汇编mbr程序  
-  - loader.asm   硬盘启动汇编loader程序
+### mbr_disk.asm 硬盘启动汇编mbr程序  loader.asm 硬盘启动汇编loader程序
   
-  6. 使用nasm对上述汇编代码编译，生成二进制：  
+  1. 使用nasm对上述汇编代码编译，生成二进制：  
      `<nasm -o mbr_disk.bin mbr_disk.asm>`
      `<nasm -o loader.bin loader.asm>`
     
-  7. 执行以下命令，生成虚拟磁盘文件:  
+  2. 执行以下命令，生成虚拟磁盘文件:  
      `<dd if=mbr_disk.bin of=hello.img bs=512 count=1 conv=notrunc>`
      `<dd if=loader.bin of=hello.img bs=512 count=1 seek=2 conv=notrunc>`
      `<dd if=/dev/zero of=emptydisk1.img bs=512 count=2880>`
