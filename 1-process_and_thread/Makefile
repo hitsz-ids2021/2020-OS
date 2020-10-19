@@ -27,7 +27,7 @@ p4: p4.c
 	gcc -o p4 p4.c $(Flag)
 
 wait1: wait1.c csapp.h
-	gcc -o wait1 wait1.c $(Flag) 
+	gcc -o wait1 wait1.c $(Flag) $(Lib)
 
 wait2: wait2.c csapp.h
 	gcc -o wait2 wait2.c $(Flag) $(Lib) 
@@ -39,4 +39,4 @@ execve: execve.c csapp.h
 	gcc -o execve execve.c $(Flag) $(Lib) 
 
 clean:
-	rm cpu $(Fork) p4 wait1 wait2  waitpid execve
+	rm cpu $(Fork) p4 wait1 wait2 waitpid execve

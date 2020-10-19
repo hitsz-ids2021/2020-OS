@@ -1,3 +1,4 @@
+#include "csapp.h"
 void fork7() {
     int child_status;
 
