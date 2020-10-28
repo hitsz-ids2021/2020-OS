@@ -1,7 +1,7 @@
 #include "csapp.h"
 
 void fork5() {
-    if (fork() == 0) {
+    if (Fork() == 0) {
         /* Child */
         printf("Terminating Child, PID = %d\n", getpid());
         exit(0);

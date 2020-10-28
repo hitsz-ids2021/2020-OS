@@ -1,9 +1,11 @@
+#include "csapp.h"
+
 void fork3()
 {
     printf("L0\n");
-    if (fork() != 0) {
+    if (Fork() != 0) {
         printf("L1\n");
-        if (fork() != 0) {
+        if (Fork() != 0) {
             printf("L2\n");
 	}
     }

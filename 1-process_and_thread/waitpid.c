@@ -6,7 +6,7 @@ void fork8() {
     int i, child_status;
 
     for (i = 0; i < N; i++)
-        if ((pid[i] = fork()) == 0) {
+        if ((pid[i] = Fork()) == 0) {
             exit(100+i); /* Child */
         }
     for (i = 0; i < N; i++) { /* Parent */
