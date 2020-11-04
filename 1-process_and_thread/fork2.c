@@ -3,9 +3,9 @@
 void fork2()
 {
     printf("L0\n");
-    fork();
+    Fork();
     printf("L1\n");
-    fork();
+    Fork();
     printf("Bye\n");
 }
 

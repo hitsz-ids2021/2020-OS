@@ -1,7 +1,9 @@
+#include "csapp.h"
+
 void fork7() {
     int child_status;
 
-    if (fork() == 0) {
+    if (Fork() == 0) {
         printf("HC: hello from child\n");
 	exit(0);
     } else {
